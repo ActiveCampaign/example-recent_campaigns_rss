@@ -28,7 +28,7 @@ To specify what list the script uses (to find recent campaigns from), set the `l
 
 (If you don't set the `listid` parameter, it will try using list ID `1` by default.)
 
-Access the URL of the script to load it in an RSS reader.
+Copy the URL of the script to load it in an RSS reader.
 
 ## Documentation and Links
 
