@@ -20,43 +20,55 @@
 
 	$listid = (isset($_GET["listid"]) && (int)$_GET["listid"]) ? $_GET["listid"] : 1;
 
-	//header("Content-type: application/rss+xml");
-	print("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+	header("Content-type: text/xml");
+	print("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 
 ?>
 
 <rss version="2.0">
 
-<channel>
+	<channel>
 
-	<title>Recent Campaigns</title>
-	<link>http://<?php echo $_SERVER["HTTP_HOST"]; ?><?php echo $_SERVER["REQUEST_URI"]; ?></link>
-	<description>Recent campaign feed with link to web copy of message</description>
+		<title>Recent Campaigns</title>
+		<link>http://<?php echo $_SERVER["HTTP_HOST"]; ?><?php echo $_SERVER["REQUEST_URI"]; ?></link>
+		<description>Recent campaign feed with link to web copy of message</description>
 
-	<?php
+		<?php
 
-		$campaigns = $ac->api("campaign/list?ids=all&filters[listid]={$listid}&sort=cdate&sort_direction=DESC&page=1");
+			$campaigns = $ac->api("campaign/list?ids=all&filters[listid]={$listid}&sort=cdate&sort_direction=DESC&page=1");
 //$ac->dbg($campaigns);
 
-		foreach ($campaigns as $campaign) {
+			foreach ($campaigns as $campaign) {
 
-			if (isset($campaign->messages[0])) {
+				if (isset($campaign->messages[0])) {
 
-				?>
+					// try to get just the content inside <body>
+					preg_match_all("|<body>(.*)</body>|iUs", $campaign->messages[0]->html, $body_content);
 
-				<title><?php echo $campaign->messages[0]->subject; ?></title>
-				<link><?php echo $account_url . "/index.php?action=social&c=" . md5($campaign->id) . "." . $campaign->messages[0]->id; ?></link>
-				<pubDate><?php echo date("r", strtotime($campaign->cdate)); ?></pubDate>
-				<content><![CDATA[ <?php echo $campaign->messages[0]->html; ?> ]]></content>
+					if (isset($body_content[1][0])) {
+						$body = $body_content[1][0];
+					}
+					else {
+						$body = $campaign->messages[0]->html;
+					}
 
-				<?php
+					?>
+
+					<item>
+						<title><?php echo $campaign->messages[0]->subject; ?></title>
+						<link><![CDATA[<?php echo $account_url . "/index.php?action=social&c=" . md5($campaign->id) . "." . $campaign->messages[0]->id; ?>]]></link>
+						<pubDate><?php echo date("r", strtotime($campaign->cdate)); ?></pubDate>
+						<description><![CDATA[ <?php echo $body; ?> ]]></description>
+					</item>
+
+					<?php
+
+				}
 
 			}
 
-		}
+		?>
 
-	?>
-
-</channel>
+	</channel>
 
 </rss>
