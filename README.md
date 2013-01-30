@@ -1,4 +1,4 @@
-ActiveCampaign Custom API Script: Fetch recent campaigns and format it as an RSS feed.
+ActiveCampaign Custom API Script: Fetch recent campaigns and format it as an RSS feed, with each item showing the message HTML and a link to the web copy of the campaign.
 
 ## Requirements
 
