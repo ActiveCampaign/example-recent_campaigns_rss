@@ -56,7 +56,7 @@
 
 					<item>
 						<title><?php echo $campaign->messages[0]->subject; ?></title>
-						<link><![CDATA[<?php echo $account_url . "/index.php?action=social&c=" . md5($campaign->id) . "." . $campaign->messages[0]->id; ?>]]></link>
+						<link><![CDATA[<?php echo $account_url . "/index.php?action=social&chash=" . md5($campaign->id) . "." . $campaign->messages[0]->id; ?>]]></link>
 						<pubDate><?php echo date("r", strtotime($campaign->cdate)); ?></pubDate>
 						<description><![CDATA[ <?php echo $body; ?> ]]></description>
 					</item>
